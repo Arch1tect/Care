@@ -1,3 +1,4 @@
 care/
 *.png
 *.pyc
+src/cfg/credentials.py

@@ -2,3 +2,6 @@ imutils==0.4.3
 scikit-image==0.13.0
 opencv-python==3.3.0.10
 selenium==3.5.0
+SQLAlchemy==1.1.14
+MySQL-python==1.2.5
+requests==2.18.4

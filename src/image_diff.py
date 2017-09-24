@@ -1,10 +1,13 @@
 # http://www.pyimagesearch.com/2017/06/19/image-difference-with-opencv-and-python/
+import logging
 
 from skimage.measure import compare_ssim
 import imutils
 import cv2
 
-def compare_img(old_img_path, new_img_path):
+logger = logging.getLogger(__name__)
+SSIM_DIFF_THRESHOLD = 0.0001
+def compare_img(task, old_img_path, new_img_path, diff_img_path):
 	# load the two input images
 	imageA = cv2.imread(old_img_path)
 	imageB = cv2.imread(new_img_path)
@@ -13,11 +16,19 @@ def compare_img(old_img_path, new_img_path):
 	grayA = cv2.cvtColor(imageA, cv2.COLOR_BGR2GRAY)
 	grayB = cv2.cvtColor(imageB, cv2.COLOR_BGR2GRAY)
 
+	logger.info("[Task {}] Comparing SSIM".format(task.id))
+
 	# compute the Structural Similarity Index (SSIM) between the two
 	# images, ensuring that the difference image is returned
 	(score, diff) = compare_ssim(grayA, grayB, full=True)
 	diff = (diff * 255).astype("uint8")
-	print "SSIM: {}".format(score)
+	logger.info("[Task {}] SSIM: {}".format(task.id, score))
+	
+	if 1-abs(score) < SSIM_DIFF_THRESHOLD:
+		logger.info('[Task {}] Hasn\'t changed'.format(task.id))
+		return False
+		
+	logger.info('[Task {}] Detected change'.format(task.id))
 
 	# threshold the difference image, followed by finding contours to
 	# obtain the regions of the two input images that differ
@@ -39,10 +50,12 @@ def compare_img(old_img_path, new_img_path):
 
 
 	# show the output images
-	cv2.imwrite('Ori.png', imageA)
-	cv2.imwrite('Modi.png', imageB)
-	cv2.imwrite('Diff.png', diff)
-	cv2.imwrite('Thresh.png', thresh)
+	# cv2.imwrite('Ori.png', imageA)
+	cv2.imwrite(diff_img_path, imageB)
+	# cv2.imwrite('Diff.png', diff)
+	# cv2.imwrite('Thresh.png', thresh)
+
+	return True
 
 # old_img_path = 'original_02.png'
 # new_img_path = 'modified_02.png'
