@@ -12,6 +12,11 @@ from snapshot import take_snapshot, close_driver
 from image_diff import compare_img
 from mailgun import notify_change
 
+# Always change directory to /src
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
+
 logging.basicConfig(
 	format='%(asctime)s %(levelname)-8s %(message)s',
 	level = logging.INFO
@@ -29,29 +34,30 @@ for t in session.query(CareTask).all():
 	now = datetime.utcnow()
 	new_snapshot_taken = False
 	try: 
-		time_past = (now-t.last_run).total_seconds()
+		time_past = (now-t.last_run_time).total_seconds()
 		# now_timestamp = int((now-datetime.utcfromtimestamp(0)).total_seconds())
-		# last_run_timestamp = int((t.last_run-datetime.utcfromtimestamp(0)).total_seconds())
+		# last_run_time_timestamp = int((t.last_run_time-datetime.utcfromtimestamp(0)).total_seconds())
 		if time_past >= t.interval:
-			logger.info('[Task {}] Last_run {}'.format(t.id, t.last_run))
+			logger.info('[Task {}] last_run_time {}'.format(t.id, t.last_run_time))
 
 			# get new snapshot
-			old_snapshot_name = '../snapshot/{}-{}.png'.format(t.id, t.run_count)
-			snapshot_name = '../snapshot/{}-{}.png'.format(t.id, t.run_count + 1)
+			old_snapshot_path = '../snapshot/{}-{}.png'.format(t.id, t.last_run_id)
+			new_snapshot_name = '{}-{}.png'.format(t.id, t.last_run_id + 1)
+			new_snapshot_path = '../snapshot/{}'.format(new_snapshot_name)
 			
 			# print old_snapshot_name
-			new_snapshot_taken = take_snapshot(t, snapshot_name)
+			new_snapshot_taken = take_snapshot(t, new_snapshot_path, new_snapshot_name)
 			if new_snapshot_taken:
 
-				t.run_count = t.run_count + 1
-				t.last_run = now
+				t.last_run_id = t.last_run_id + 1
+				t.last_run_time = now
 				# ensure there's a previous snapshot to compare
-				if new_snapshot_taken and os.path.isfile(old_snapshot_name):
+				if os.path.isfile(old_snapshot_path):
 					# compare new snapshot with old snapshot
-					diff_img_name = '{}-{}.png'.format(t.id, t.run_count+1)
+					diff_img_name = '{}-{}.png'.format(t.id, t.last_run_id+1)
 					diff_img_path = '../snapshot/change/{}'.format(diff_img_name)
 
-					changed = compare_img(t, old_snapshot_name, snapshot_name, diff_img_path)
+					changed = compare_img(t, old_snapshot_path, new_snapshot_path, diff_img_path)
 					if changed:
 						logger.info('[Task {}] Notify change'.format(t.id))
 						notify_change('{} changed'.format(t.name), t.url, diff_img_path, diff_img_name)

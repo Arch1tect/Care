@@ -41,7 +41,7 @@ def close_driver():
 		driver.close()
 	driver = None
 
-def take_snapshot(task, snapshot_name):
+def take_snapshot(task, snapshot_path, snapshot_name):
 	# TODO: no need to save if found no change
 	# https://stb-tester.com/blog/2016/09/20/add-visual-verification-to-your-selenium-tests-with-stb-tester
 	driver = get_driver()
@@ -49,9 +49,9 @@ def take_snapshot(task, snapshot_name):
 		logger.info('[Task {}] Loading {}'.format(task.id, task.url))
 		driver.get(task.url)
 		logger.info('[Task {}] Taking snapshot'.format(task.id))
-		driver.save_screenshot(snapshot_name)
+		driver.save_screenshot(snapshot_path)
 
-		logger.info('[Task {}] Snapshot success.'.format(task.id))
+		logger.info('[Task {}] Snapshot saved successfully - {}'.format(task.id, snapshot_name))
 
 	except Exception as e:
 		logger.exception(e)
