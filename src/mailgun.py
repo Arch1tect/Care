@@ -11,9 +11,9 @@ def send_simple_message(subject, msg=None, html=None, files=None):
 			  "html": html,
 			  "text": msg})
 
-def notify_change(subject, img_path):
+def notify_change(subject, url, img_path, img_name):
 # http://mailgun-documentation.readthedocs.io/en/latest/user_manual.html#sending-via-api
-	html = "<html>Content changed: <img src='cid:snapshot.png'></html>"
+	html = "<html>Content at <a href='{0}'>{1}</a> has changed: <img src='cid:{2}' style='max-width:400px;'></html>".format(url, url, img_name)
 	files = [("inline", open(img_path))]
 
 	return send_simple_message(subject, html=html, files=files)

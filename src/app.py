@@ -40,27 +40,28 @@ for t in session.query(CareTask).all():
 			snapshot_name = '../snapshot/{}-{}.png'.format(t.id, t.run_count + 1)
 			
 			# print old_snapshot_name
-			take_snapshot(t, snapshot_name)
-			new_snapshot_taken = True
+			new_snapshot_taken = take_snapshot(t, snapshot_name)
+			if new_snapshot_taken:
 
-			# ensure there's a previous snapshot to compare
-			if os.path.isfile(old_snapshot_name):
-				# compare new snapshot with old snapshot
-				diff_img_path = '../snapshot/change/{}-{}.png'.format(t.id, t.run_count+1)
+				t.run_count = t.run_count + 1
+				t.last_run = now
+				# ensure there's a previous snapshot to compare
+				if new_snapshot_taken and os.path.isfile(old_snapshot_name):
+					# compare new snapshot with old snapshot
+					diff_img_name = '{}-{}.png'.format(t.id, t.run_count+1)
+					diff_img_path = '../snapshot/change/{}'.format(diff_img_name)
 
-				changed = compare_img(t, old_snapshot_name, snapshot_name, diff_img_path)
-				if changed:
-					logger.info('[Task {}] Notify change'.format(t.id))
-					notify_change('{} changed'.format(t.name), diff_img_path)
-			else:
-				logger.info('[Task {}] No previous snapshot.'.format(t.id))
+					changed = compare_img(t, old_snapshot_name, snapshot_name, diff_img_path)
+					if changed:
+						logger.info('[Task {}] Notify change'.format(t.id))
+						notify_change('{} changed'.format(t.name), t.url, diff_img_path, diff_img_name)
+				else:
+					logger.info('[Task {}] No previous snapshot.'.format(t.id))
 
 	except Exception as e:
 		logger.exception(e)
 		logger.error('[Task {}] Failed'.format(t.id))
-	if new_snapshot_taken:
-		t.run_count = t.run_count + 1
-		t.last_run = now
+
 	# break
 session.commit()
 close_driver()

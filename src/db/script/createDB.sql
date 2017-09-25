@@ -6,5 +6,6 @@ CREATE TABLE `task` (
   `created` timestamp NULL DEFAULT NULL,
   `url` varchar(1000) DEFAULT NULL,
   `run_count` int(10) unsigned NOT NULL DEFAULT '0',
+  `roi` varchar(63) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;

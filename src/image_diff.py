@@ -12,6 +12,13 @@ def compare_img(task, old_img_path, new_img_path, diff_img_path):
 	imageA = cv2.imread(old_img_path)
 	imageB = cv2.imread(new_img_path)
 
+	if task.roi:
+		# crop to region of interest
+		logger.info("[Task {}] Getting ROI".format(task.id))
+		roi = map(int, task.roi.split()) # x1 y1 x2 y2
+		imageA = imageA[roi[1]:roi[3], roi[0]:roi[2]] # [y1:y2, x1:x2]
+		imageB = imageB[roi[1]:roi[3], roi[0]:roi[2]] # [y1:y2, x1:x2]
+
 	# convert the images to grayscale
 	grayA = cv2.cvtColor(imageA, cv2.COLOR_BGR2GRAY)
 	grayB = cv2.cvtColor(imageB, cv2.COLOR_BGR2GRAY)

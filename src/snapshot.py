@@ -56,3 +56,5 @@ def take_snapshot(task, snapshot_name):
 	except Exception as e:
 		logger.exception(e)
 		logger.error('[Task {}] Snapshot failed.'.format(task.id))
+		return False
+	return True
