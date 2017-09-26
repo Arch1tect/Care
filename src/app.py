@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import logging
 from datetime import datetime
@@ -25,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 db_url = 'chat-anywhere-mysql.cjwz9xnh80ai.us-west-1.rds.amazonaws.com'
 connection_str = 'mysql://{}:{}@{}'.format(db_user, db_password, db_url)
-engine = create_engine(connection_str)
+engine = create_engine(connection_str, encoding='utf8')
 engine.execute("USE care")
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
@@ -33,7 +34,7 @@ session = DBSession()
 for t in session.query(CareTask).all():
 	now = datetime.utcnow()
 	new_snapshot_taken = False
-	try: 
+	try:
 		time_past = (now-t.last_run_time).total_seconds()
 		# now_timestamp = int((now-datetime.utcfromtimestamp(0)).total_seconds())
 		# last_run_time_timestamp = int((t.last_run_time-datetime.utcfromtimestamp(0)).total_seconds())
