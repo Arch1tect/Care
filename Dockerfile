@@ -31,4 +31,4 @@ RUN pip install --upgrade pip
 RUN mkdir /app
 COPY . /app
 
-RUN pip install -r /app/src/requirements.txt
+RUN pip --no-cache-dir install -r /app/src/requirements.txt
