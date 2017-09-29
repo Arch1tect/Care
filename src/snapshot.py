@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 chrome_options = Options()  
 chrome_options.add_argument("--headless")
+chrome_options.add_argument("--no-sandbox")
 # binary_location is optional, selenium is able to find by itself
 # chrome_options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"  
 
