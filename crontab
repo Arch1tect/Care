@@ -1,1 +1,2 @@
-*/5 * * * * python /app/src/app.py
+
+*/5 * * * * root python /app/src/app.py >> /var/log/cron.log

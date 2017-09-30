@@ -36,9 +36,11 @@ COPY . /app
 
 
 # Add crontab file in the cron directory
-COPY crontab /etc/cron.d/care-cron
+# COPY crontab /etc/cron.d/care-cron
+RUN cat /app/crontab >> /etc/crontab 
+
 # Give execution rights on the cron job
-RUN chmod 0644 /etc/cron.d/care-cron
+# RUN chmod 0644 /etc/cron.d/care-cron
 
 # Create the log file to be able to run tail
 RUN touch /var/log/cron.log
