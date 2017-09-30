@@ -78,7 +78,6 @@ for t in session.query(CareTask).all():
 		logger.exception(e)
 		logger.error('[Task {}] Failed'.format(t.id))
 
-	# break
 session.commit()
 close_driver()
 
