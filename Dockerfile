@@ -43,7 +43,8 @@ RUN cat /app/crontab >> /etc/crontab
 # RUN chmod 0644 /etc/cron.d/care-cron
 
 # Create the log file to be able to run tail
-RUN touch /var/log/cron.log
+RUN touch /var/log/care.log
+RUN chmod 0777 /var/log/care.log
 
 
 RUN pip --no-cache-dir install -r /app/src/requirements.txt

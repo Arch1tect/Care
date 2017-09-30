@@ -23,7 +23,15 @@ logging.basicConfig(
 	level = logging.INFO,
 	filename = '/var/log/care.log'
 	)
+
+console_logger = logging.StreamHandler()
+console_logger.setLevel(logging.INFO)
+
+logging.getLogger('').addHandler(console_logger)
+
 logger = logging.getLogger(__name__)
+
+
 
 db_url = 'chat-anywhere-mysql.cjwz9xnh80ai.us-west-1.rds.amazonaws.com'
 connection_str = 'mysql://{}:{}@{}'.format(db_user, db_password, db_url)
