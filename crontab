@@ -1,2 +1,2 @@
 
-*/5 * * * * root python /app/src/app.py >> /var/log/cron.log
+* * * * * docker exec fde5b2879103 bash /app/run
