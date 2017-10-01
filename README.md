@@ -26,6 +26,11 @@ run
 
 e.g. `docker run -td -v /Users/david/Project/Care:/app_host_shared care`
 
+Change your cron job to
+
+`* * * * * docker exec <container_id> python /app_host_shared/src/app.py`
+
+This way it will use project directory outside of docker container
 
 
 # Installing chrome on ec2
