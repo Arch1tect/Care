@@ -1,20 +1,30 @@
-# care
+# Care
 Monitor web page change that you care
 
 
 # Docker
 It's difficult to set up environment, install all dependencies for this project correctly, so we are using Docker. Dockerfile is included so you just need to build your image and container:
 
-`docker build -t <image_name> .`
-`docker run -td <container_name>`
+`docker build -t <image name> .`
+`docker run -td <image name>`
 
--td keeps container running
+* -td keeps container running in background
 
 Cron is not included in docker so in order to run the job periodically, you need to have an entry like below in your crontab:
 
 `* * * * * docker exec <container_id> bash /app/run`
 
+## Share directory
+Although Dockerfile can copy whole project into /app directory in container, it's more convienent to be able to read/write to some directory on server so that we can save persistent data like log and snapshots. 
+To share directory, instead of running
 
+`docker run -td <image name>`
+
+run
+
+`docker run -td -v <absolute path of directory to be shared>:/<path to shared directory in container> <image name>`
+
+e.g. `docker run -td -v /Users/david/Project/Care:/app_host_shared care`
 
 
 

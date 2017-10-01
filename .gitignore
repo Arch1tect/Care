@@ -1,4 +1,5 @@
 care/
 *.png
 *.pyc
+log/*.txt
 src/cfg/credentials.py

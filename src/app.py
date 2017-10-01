@@ -21,7 +21,7 @@ os.chdir(dname)
 logging.basicConfig(
 	format='%(asctime)s %(levelname)-8s %(message)s',
 	level = logging.INFO,
-	filename = '/var/log/care.log'
+	filename = '../log/log.txt'
 	)
 
 console_logger = logging.StreamHandler()
