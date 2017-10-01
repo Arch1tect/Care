@@ -9,3 +9,16 @@ CREATE TABLE `task` (
   `roi` varchar(63) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+
+
+
+
+CREATE TABLE `log` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `changed` bit(1) DEFAULT NULL,
+  `timestamp` timestamp NULL DEFAULT NULL,
+  `success` bit(1) DEFAULT NULL,
+  `task_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

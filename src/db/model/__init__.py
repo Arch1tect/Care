@@ -2,7 +2,7 @@ import os
 import sys
 import datetime
 
-from sqlalchemy import Column, ForeignKey, Integer, String, TIMESTAMP
+from sqlalchemy import Column, ForeignKey, Integer, String, TIMESTAMP, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -21,3 +21,13 @@ class CareTask(Base):
 	url = Column(String(1000))
 	last_run_id = Column(Integer)
 	roi = Column(String(63))
+
+class TaskLog(Base):
+	__tablename__ = 'log'
+	# Here we define columns for the table person
+	# Notice that each column is also a normal Python instance attribute.
+	id = Column(Integer, primary_key=True)
+	task_id = Column(Integer)
+	timestamp = Column(TIMESTAMP)
+	changed = Column(Boolean)
+	success = Column(Boolean)

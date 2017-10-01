@@ -6,7 +6,7 @@ from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from db.model import CareTask
+from db.model import CareTask, TaskLog
 from cfg.credentials import db_user, db_password
 
 from snapshot import take_snapshot, close_driver
@@ -45,38 +45,46 @@ for t in session.query(CareTask).all():
 	new_snapshot_taken = False
 	try:
 		time_past = (now-t.last_run_time).total_seconds()
-		# now_timestamp = int((now-datetime.utcfromtimestamp(0)).total_seconds())
-		# last_run_time_timestamp = int((t.last_run_time-datetime.utcfromtimestamp(0)).total_seconds())
+
 		if time_past >= t.interval:
-			logger.info('[Task {}] last_run_time {}'.format(t.id, t.last_run_time))
+			check_log = TaskLog(task_id=t.id, timestamp=now, success=False)
+			try:
+				logger.info('[Task {}] last_run_time {}'.format(t.id, t.last_run_time))
 
-			# get new snapshot
-			old_snapshot_path = '../snapshot/{}-{}.png'.format(t.id, t.last_run_id)
-			new_snapshot_name = '{}-{}.png'.format(t.id, t.last_run_id + 1)
-			new_snapshot_path = '../snapshot/{}'.format(new_snapshot_name)
+				# get new snapshot
+				old_snapshot_path = '../snapshot/{}-{}.png'.format(t.id, t.last_run_id)
+				new_snapshot_name = '{}-{}.png'.format(t.id, t.last_run_id + 1)
+				new_snapshot_path = '../snapshot/{}'.format(new_snapshot_name)
 			
-			# print old_snapshot_name
-			new_snapshot_taken = take_snapshot(t, new_snapshot_path, new_snapshot_name)
-			if new_snapshot_taken:
+				new_snapshot_taken = take_snapshot(t, new_snapshot_path, new_snapshot_name)
+				
+				if new_snapshot_taken:
 
-				t.last_run_id = t.last_run_id + 1
-				t.last_run_time = now
-				# ensure there's a previous snapshot to compare
-				if os.path.isfile(old_snapshot_path):
-					# compare new snapshot with old snapshot
-					diff_img_name = '{}-{}.png'.format(t.id, t.last_run_id+1)
-					diff_img_path = '../snapshot/change/{}'.format(diff_img_name)
+					t.last_run_id = t.last_run_id + 1
+					t.last_run_time = now
+					# ensure there's a previous snapshot to compare
+					if os.path.isfile(old_snapshot_path):
+						# compare new snapshot with old snapshot
+						diff_img_name = '{}-{}.png'.format(t.id, t.last_run_id+1)
+						diff_img_path = '../snapshot/change/{}'.format(diff_img_name)
 
-					changed = compare_img(t, old_snapshot_path, new_snapshot_path, diff_img_path)
-					if changed:
-						logger.info('[Task {}] Notify change'.format(t.id))
-						notify_change('{} changed'.format(t.name), t.url, diff_img_path, diff_img_name)
-				else:
-					logger.info('[Task {}] No previous snapshot.'.format(t.id))
+						changed = compare_img(t, old_snapshot_path, new_snapshot_path, diff_img_path)
+						check_log.changed = changed
+						if changed:
+							logger.info('[Task {}] Notify change'.format(t.id))
+							notify_change('{} changed'.format(t.name), t.url, diff_img_path, diff_img_name)
+
+					else:
+						logger.info('[Task {}] No previous snapshot.'.format(t.id))
+					check_log.success = True
+			except Exception as e:
+				logger.exception(e)
+				logger.error('[Task {}] fail to check update'.format(t.id))
+			session.add(check_log)
 
 	except Exception as e:
 		logger.exception(e)
-		logger.error('[Task {}] Failed'.format(t.id))
+		logger.error('[Task {}] fail to check time past'.format(t.id))
 
 session.commit()
 close_driver()
