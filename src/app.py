@@ -3,42 +3,15 @@ import os
 import logging
 from datetime import datetime
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
 from db.model import CareTask, TaskLog
-from cfg.credentials import db_user, db_password
-
+from db_session import session
 from snapshot import take_snapshot, close_driver
 from image_diff import compare_img
 from mailgun import notify_change
-
-# Always change directory to /src
-abspath = os.path.abspath(__file__)
-dname = os.path.dirname(abspath)
-os.chdir(dname)
-
-logging.basicConfig(
-	format='%(asctime)s %(levelname)-8s %(message)s',
-	level = logging.INFO,
-	filename = '../log/log.txt'
-	)
-
-console_logger = logging.StreamHandler()
-console_logger.setLevel(logging.INFO)
-
-logging.getLogger('').addHandler(console_logger)
+import setup
 
 logger = logging.getLogger(__name__)
 
-
-
-db_url = 'chat-anywhere-mysql.cjwz9xnh80ai.us-west-1.rds.amazonaws.com'
-connection_str = 'mysql://{}:{}@{}'.format(db_user, db_password, db_url)
-engine = create_engine(connection_str, encoding='utf8')
-engine.execute("USE care")
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
 
 for t in session.query(CareTask).all():
 	now = datetime.utcnow()
