@@ -15,23 +15,13 @@ chrome_options.add_argument("--no-sandbox")
 
 driver = None
 
-
-# url = "https://www.goo000dsdsgle.com"
-# url = "https://www.google.com"
-# # url = "https://www.zhihu.com/explore"
-# url = "https://www.v2ex.com/t/379120"
-# # url = 'https://time.is/'
-# url = 'https://www.sitepoint.com/how-to-create-mysql-events/'
-
-
 def get_driver():
 	global driver
 	if not driver:
 		logger.info('Starting Chrome driver')
 		# IMPORTANT: driver must be in system $PATH
 		driver = webdriver.Chrome(chrome_options=chrome_options)
-		driver.set_page_load_timeout(10)
-		driver.set_window_size(1000, 2000) # bad, how to know the height of web page?
+		driver.set_page_load_timeout(15)
 
 	return driver
 
@@ -42,17 +32,20 @@ def close_driver():
 		driver.close()
 	driver = None
 
-def take_snapshot(task, snapshot_path, snapshot_name):
+def take_snapshot(task, snapshot_path):
 	# TODO: no need to save if found no change
 	# https://stb-tester.com/blog/2016/09/20/add-visual-verification-to-your-selenium-tests-with-stb-tester
 	driver = get_driver()
 	try:
 		logger.info('[Task {}] Loading {}'.format(task.id, task.url))
 		driver.get(task.url)
+		width = driver.execute_script("return document.body.scrollWidth")
+		height = driver.execute_script("return document.body.scrollHeight")
+		driver.set_window_size(width, height)
 		logger.info('[Task {}] Taking snapshot'.format(task.id))
 		driver.save_screenshot(snapshot_path)
 
-		logger.info('[Task {}] Snapshot saved successfully - {}'.format(task.id, snapshot_name))
+		logger.info('[Task {}] Snapshot saved successfully - {}'.format(task.id, snapshot_path))
 
 	except Exception as e:
 		logger.exception(e)

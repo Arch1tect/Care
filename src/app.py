@@ -29,7 +29,7 @@ for t in session.query(CareTask).all():
 				new_snapshot_name = '{}-{}.png'.format(t.id, t.last_run_id + 1)
 				new_snapshot_path = '../snapshot/{}'.format(new_snapshot_name)
 			
-				new_snapshot_taken = take_snapshot(t, new_snapshot_path, new_snapshot_name)
+				new_snapshot_taken = take_snapshot(t, new_snapshot_path)
 				
 				if new_snapshot_taken:
 
