@@ -1,4 +1,5 @@
 import logging
+import time
 
 from selenium import webdriver  
 from selenium.webdriver.chrome.options import Options
@@ -42,6 +43,7 @@ def take_snapshot(task, snapshot_path):
 		width = driver.execute_script("return document.body.scrollWidth")
 		height = driver.execute_script("return document.body.scrollHeight")
 		driver.set_window_size(width, height)
+		time.sleep(1)
 		logger.info('[Task {}] Taking snapshot'.format(task.id))
 		driver.save_screenshot(snapshot_path)
 

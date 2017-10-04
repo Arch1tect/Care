@@ -1,6 +1,6 @@
 import time
 
-from flask import Flask, send_file
+from flask import Flask, send_file, make_response
 
 import setup
 from db_session import session
@@ -30,7 +30,9 @@ def take_snapshot_for_url(url):
 	task = CareTask(id=0, name='new', url=url)
 	snapshot_path = '../snapshot/{}.png'.format(time.time())
 	if take_snapshot(task, snapshot_path):
-		return send_file(snapshot_path, mimetype='image/png')
+		response = make_response(send_file(snapshot_path, mimetype='image/png'))
+		response.headers['Access-Control-Allow-Origin'] = '*'
+		return response
 	return 'Failed to take snapshot.'
 
 # TODO debug=True only for dev environment
