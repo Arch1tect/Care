@@ -10,7 +10,7 @@ from snapshot import take_snapshot
 app = Flask(__name__)
 
 
-@app.route("/task/<task_id>/snapshot")
+@app.route("/api/task/<task_id>/snapshot")
 def get_snapshot_for_task(task_id):
 	'''Get snapshot of existing task'''
 	task = session.query(CareTask).filter(CareTask.id==task_id).one()
@@ -22,18 +22,20 @@ def get_snapshot_for_task(task_id):
 	return 'Failed to take snapshot.'
 
 
-@app.route("/snapshot/<path:url>")
+@app.route("/api/snapshot/<path:url>")
 def take_snapshot_for_url(url):
 	url = url.lower()
 	if not url.startswith('http'):
 		url = 'http://' + url
 	task = CareTask(id=0, name='new', url=url)
-	snapshot_path = '../snapshot/{}.png'.format(time.time())
+	snapshot_name = '{}.png'.format(time.time())
+	snapshot_path = '../snapshot/{}'.format(snapshot_name)
 	if take_snapshot(task, snapshot_path):
-		response = make_response(send_file(snapshot_path, mimetype='image/png'))
-		response.headers['Access-Control-Allow-Origin'] = '*'
-		return response
-	return 'Failed to take snapshot.'
+		# response = make_response(send_file(snapshot_path, mimetype='image/png'))
+		# response.headers['Access-Control-Allow-Origin'] = '*'
+		return snapshot_name
+
+	return 'Failed to take snapshot.', 500
 
 # TODO debug=True only for dev environment
-app.run(debug=True, port=8080)
+app.run(debug=True, port=8088)
