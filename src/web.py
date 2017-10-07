@@ -1,6 +1,6 @@
 import time
 
-from flask import Flask, send_file, make_response
+from flask import Flask, send_file, make_response, request
 
 import setup
 from db_session import session
@@ -21,6 +21,16 @@ def get_snapshot_for_task(task_id):
 		return send_file(new_snapshot_path, mimetype='image/png')
 	return 'Failed to take snapshot.'
 
+@app.route("/api/task", methods=['POST'])
+def create_new_task():
+	'''Create new task'''
+
+	# TODO: avoid duplicate
+	data = request.get_json()
+	task = CareTask(name=data['name'], url=data['url'], interval=60*1)
+	session.add(task)
+	session.commit()
+	return 'success'
 
 @app.route("/api/snapshot/<path:url>")
 def take_snapshot_for_url(url):
@@ -36,6 +46,8 @@ def take_snapshot_for_url(url):
 		return snapshot_name
 
 	return 'Failed to take snapshot.', 500
+
+
 
 # TODO debug=True only for dev environment
 app.run(debug=True, port=8088)

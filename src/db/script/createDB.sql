@@ -4,12 +4,11 @@ CREATE TABLE `task` (
   `interval` int(11) unsigned DEFAULT NULL,
   `last_run_time` timestamp NULL DEFAULT NULL,
   `created` timestamp NULL DEFAULT NULL,
-  `url` varchar(1000) DEFAULT NULL,
-  `last_run_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `roi` varchar(63) DEFAULT NULL,
+  `url` varchar(1000) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `last_run_id` int(10) unsigned DEFAULT '0',
+  `roi` varchar(63) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
-
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 
 

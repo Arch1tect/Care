@@ -42,6 +42,11 @@ def take_snapshot(task, snapshot_path):
 		driver.get(task.url)
 		width = driver.execute_script("return document.body.scrollWidth")
 		height = driver.execute_script("return document.body.scrollHeight")
+		if width == 0:
+			width = 800
+		if height  == 0:
+			height = 1200
+		logger.info('[Task {}] Document size {},{}'.format(task.id, width, height))
 		driver.set_window_size(width, height)
 		time.sleep(1)
 		logger.info('[Task {}] Taking snapshot'.format(task.id))
