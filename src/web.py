@@ -1,4 +1,5 @@
 import time
+import logging
 
 from flask import Flask, send_file, make_response, request
 
@@ -8,6 +9,8 @@ from db.model import CareTask, TaskLog
 from snapshot import take_snapshot
 
 app = Flask(__name__)
+
+logger = logging.getLogger(__name__)
 
 
 @app.route("/api/task/<task_id>/snapshot")
@@ -27,16 +30,16 @@ def create_new_task():
 
 	# TODO: avoid duplicate
 	data = request.get_json()
-	task = CareTask(name=data['name'], url=data['url'], interval=60*1)
+	url = correct_url(data['url'])
+	logger.info('Creating new task with data {}'.format(data))
+	task = CareTask(name=data.get('name'), url=url, interval=data['interval'])
 	session.add(task)
 	session.commit()
 	return 'success'
 
-@app.route("/api/snapshot/<path:url>")
+@app.route("/api/screenshot/<path:url>")
 def take_snapshot_for_url(url):
-	url = url.lower()
-	if not url.startswith('http'):
-		url = 'http://' + url
+	url = correct_url(url)
 	task = CareTask(id=0, name='new', url=url)
 	snapshot_name = '{}.png'.format(time.time())
 	snapshot_path = '../snapshot/{}'.format(snapshot_name)
@@ -47,7 +50,11 @@ def take_snapshot_for_url(url):
 
 	return 'Failed to take snapshot.', 500
 
-
+def correct_url(url):
+	url = url.lower()
+	if not url.startswith('http'):
+		url = 'http://' + url
+	return url
 
 # TODO debug=True only for dev environment
 app.run(debug=True, port=8088)

@@ -45,7 +45,11 @@ for t in session.query(CareTask).all():
 						check_log.changed = changed
 						if changed:
 							logger.info('[Task {}] Notify change'.format(t.id))
-							notify_change('{} changed'.format(t.name), t.url, diff_img_path, diff_img_name)
+							task_name = t.name
+							if not task_name:
+								task_name = t.url
+							email_subject = '{} changed'.format(task_name)
+							notify_change(email_subject, t.url, diff_img_path, diff_img_name)
 
 					else:
 						logger.info('[Task {}] No previous snapshot.'.format(t.id))

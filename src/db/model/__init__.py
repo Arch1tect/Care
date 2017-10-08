@@ -16,10 +16,10 @@ class CareTask(Base):
 	id = Column(Integer, primary_key=True)
 	name = Column(String(255))
 	interval = Column(Integer)
-	last_run_time = Column(TIMESTAMP)
+	last_run_time = Column(TIMESTAMP, default=datetime.datetime.utcnow)
 	created = Column(TIMESTAMP, default=datetime.datetime.utcnow)
 	url = Column(String(1000))
-	last_run_id = Column(Integer)
+	last_run_id = Column(Integer, default=0)
 	roi = Column(String(63))
 
 class TaskLog(Base):
