@@ -46,6 +46,8 @@ def take_snapshot(task, snapshot_path):
 			width = 800
 		if height  == 0:
 			height = 1200
+		if height > 3000:
+			height = 3000
 		logger.info('[Task {}] Document size {},{}'.format(task.id, width, height))
 		driver.set_window_size(width, height)
 		time.sleep(1)

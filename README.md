@@ -24,7 +24,7 @@ run
 
 `docker run -td -v <absolute path of directory to be shared>:/<path to shared directory in container> <image name>`
 
-e.g. `docker run -td -v /Users/david/Project/Care:/app_host_shared care`
+e.g. `docker run -td --shm-size=512m -v /Users/david/Project/Care:/app_host_shared care`
 
 Change your cron job to
 
@@ -36,7 +36,9 @@ This way it will use project directory outside of docker container
 `python web.py`
 
 API also runs in the container, so we need to expose it via
-`docker run -td -v <absolute path of directory to be shared>:/<path to shared directory in container> -p 8088:8088 <image name>`
+`docker run -td --shm-size=512m -v <absolute path of directory to be shared>:/<path to shared directory in container> -p 8088:8088 <image name>`
+
+e.g. `docker run -td --shm-size=512m -v /home/ubuntu/project/care:/host_share -p 8088:8088 care`
 
 
 # Installing chrome on ec2
