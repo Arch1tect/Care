@@ -1,2 +1,2 @@
 
-* * * * * docker exec fde5b2879103 bash /app/run
+*/5 * * * * docker exec e0638e4f11b3 python /host_share/src/app.py
