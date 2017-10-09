@@ -57,4 +57,4 @@ def correct_url(url):
 	return url
 
 # TODO debug=True only for dev environment
-app.run(debug=True, port=8088)
+app.run(debug=True, host='0.0.0.0', port=8088)

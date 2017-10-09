@@ -32,6 +32,12 @@ Change your cron job to
 
 This way it will use project directory outside of docker container
 
+## API
+`python web.py`
+
+API also runs in the container, so we need to expose it via
+`docker run -td -v <absolute path of directory to be shared>:/<path to shared directory in container> -p 8088:8088 <image name>`
+
 
 # Installing chrome on ec2
 If not using docker...
