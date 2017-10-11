@@ -14,29 +14,31 @@ chrome_options.add_argument("--no-sandbox")
 # binary_location is optional, selenium is able to find by itself
 # chrome_options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"  
 
-driver = None
+# driver = None
 
-def get_driver():
-	global driver
-	if not driver:
-		logger.info('Starting Chrome driver')
-		# IMPORTANT: driver must be in system $PATH
-		driver = webdriver.Chrome(chrome_options=chrome_options)
-		driver.set_page_load_timeout(15)
+# def get_driver():
+# 	global driver
+# 	if not driver:
+# 		logger.info('Starting Chrome driver')
+# 		# IMPORTANT: driver must be in system $PATH
+# 		driver = webdriver.Chrome(chrome_options=chrome_options)
+# 		driver.set_page_load_timeout(15)
 
-	return driver
+# 	return driver
 
-def close_driver():
-	global driver
-	logger.info('Closing Chrome driver')
-	if driver:
-		driver.close()
-	driver = None
+# def close_driver():
+# 	global driver
+# 	logger.info('Closing Chrome driver')
+# 	if driver:
+# 		driver.close()
+# 	driver = None
 
 def take_snapshot(task, snapshot_path):
 	# TODO: no need to save if found no change
 	# https://stb-tester.com/blog/2016/09/20/add-visual-verification-to-your-selenium-tests-with-stb-tester
-	driver = get_driver()
+	# driver = get_driver()
+	driver = webdriver.Chrome(chrome_options=chrome_options)
+	res = False
 	try:
 		logger.info('[Task {}] Loading {}'.format(task.id, task.url))
 		driver.get(task.url)
@@ -55,9 +57,10 @@ def take_snapshot(task, snapshot_path):
 		driver.save_screenshot(snapshot_path)
 
 		logger.info('[Task {}] Snapshot saved successfully - {}'.format(task.id, snapshot_path))
-
+		res = True
 	except Exception as e:
 		logger.exception(e)
 		logger.error('[Task {}] Snapshot failed.'.format(task.id))
-		return False
-	return True
+
+	driver.close()
+	return res

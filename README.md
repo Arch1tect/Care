@@ -38,7 +38,7 @@ This way it will use project directory outside of docker container
 API also runs in the container, so we need to expose it via
 `docker run -td --shm-size=512m -v <absolute path of directory to be shared>:/<path to shared directory in container> -p 8088:8088 <image name>`
 
-e.g. `docker run -td --shm-size=512m -v /home/ubuntu/project/care:/host_share -p 8088:8088 care`
+e.g. `docker run -td --shm-size=512m -v /home/ec2-user/project/care:/host_share -p 8088:8088 care`
 
 
 # Installing chrome on ec2

@@ -5,7 +5,7 @@ from datetime import datetime
 
 from db.model import CareTask, TaskLog
 from db_session import session
-from snapshot import take_snapshot, close_driver
+from snapshot import take_snapshot
 from image_diff import compare_img
 from mailgun import notify_change
 import setup
