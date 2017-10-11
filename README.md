@@ -28,7 +28,10 @@ e.g. `docker run -td --shm-size=512m -v /Users/david/Project/Care:/app_host_shar
 
 Change your cron job to
 
-`* * * * * docker exec <container_id> python /app_host_shared/src/app.py`
+`* * * * * docker exec <container_id> python /host_share/src/app.py`
+
+Test cronjob with
+`docker exec 990c68ddf61d python /host_share/src/app.py`
 
 This way it will use project directory outside of docker container
 
@@ -38,7 +41,7 @@ This way it will use project directory outside of docker container
 API also runs in the container, so we need to expose it via
 `docker run -td --shm-size=512m -v <absolute path of directory to be shared>:/<path to shared directory in container> -p 8088:8088 <image name>`
 
-e.g. `docker run -td --shm-size=512m -v /home/ec2-user/project/care:/host_share -p 8088:8088 care`
+e.g. `docker run -td --shm-size=512m -v /public/care:/host_share -p 8088:8088 care`
 
 
 # Installing chrome on ec2
