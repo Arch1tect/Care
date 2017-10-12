@@ -1,5 +1,6 @@
 import logging
 import time
+# import subprocess
 
 from selenium import webdriver  
 from selenium.webdriver.chrome.options import Options
@@ -62,5 +63,6 @@ def take_snapshot(task, snapshot_path):
 		logger.exception(e)
 		logger.error('[Task {}] Snapshot failed.'.format(task.id))
 
-	driver.close()
+	driver.quit()
+	# subprocess.call(["pkill", "chrome"])
 	return res
