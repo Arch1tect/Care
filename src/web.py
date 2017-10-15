@@ -32,7 +32,7 @@ def create_new_task():
 	data = request.get_json()
 	url = correct_url(data['url'])
 	logger.info('Creating new task with data {}'.format(data))
-	task = CareTask(name=data.get('name'), url=url, interval=data['interval'], roi=data['roi'])
+	task = CareTask(name=data.get('name'), url=url, interval=data['interval'], roi=data.get('roi'))
 	session.add(task)
 	session.commit()
 	return 'success'
