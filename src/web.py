@@ -37,9 +37,10 @@ def create_new_task():
 	session.commit()
 	return 'success'
 
-@app.route("/api/screenshot/<path:url>")
-def take_snapshot_for_url(url):
-	url = correct_url(url)
+@app.route("/api/screenshot/url", methods=['POST'])
+def take_snapshot_for_url():
+	data = request.get_json()
+	url = correct_url(data['url'])
 	task = CareTask(id=0, name='new', url=url)
 	snapshot_name = '{}.png'.format(time.time())
 	snapshot_path = '../snapshot/{}'.format(snapshot_name)
@@ -51,7 +52,6 @@ def take_snapshot_for_url(url):
 	return 'Failed to take snapshot.', 500
 
 def correct_url(url):
-	url = url.lower()
 	if not url.startswith('http'):
 		url = 'http://' + url
 	return url
