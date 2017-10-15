@@ -6,11 +6,9 @@ CREATE TABLE `task` (
   `created` timestamp NULL DEFAULT NULL,
   `url` varchar(1000) CHARACTER SET latin1 NOT NULL DEFAULT '',
   `last_run_id` int(10) unsigned DEFAULT '0',
-  `roi` varchar(63) CHARACTER SET latin1 DEFAULT NULL,
+  `roi` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-
-
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `log` (
