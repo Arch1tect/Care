@@ -1,5 +1,6 @@
 import time
 import logging
+import os
 
 from flask import Flask, send_file, make_response, request
 
@@ -35,6 +36,12 @@ def create_new_task():
 	task = CareTask(name=data.get('name'), url=url, interval=data['interval'], roi=data.get('roi'))
 	session.add(task)
 	session.commit()
+		
+	rand_snapshot = data.get('snapshot')
+	if rand_snapshot:
+		os.rename('../snapshot/{}'.format(rand_snapshot),
+				  '../snapshot/{}-0.png'.format(task.id))
+
 	return 'success'
 
 @app.route("/api/screenshot/url", methods=['POST'])
