@@ -13,6 +13,9 @@ app = Flask(__name__)
 
 logger = logging.getLogger(__name__)
 
+@app.teardown_request
+def shutdown_session(exception=None):
+    session.remove()
 
 @app.route("/api/task/<task_id>/snapshot")
 def get_snapshot_for_task(task_id):
