@@ -64,6 +64,8 @@ for t in session.query(CareTask).all():
 		logger.error('[Task {}] fail to check time past'.format(t.id))
 
 session.commit()
+session.remove()
+
 # close_driver()
 
 
